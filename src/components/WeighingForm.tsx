@@ -339,7 +339,7 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
                   value={supplier}
                   onChange={(e) => setSupplier(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  placeholder="Nama Supplier (misal: Suenah, H. Mahmud, dll)"
+                  placeholder="Nama Supplier (misal: mextri, H. Mahmud, dll)"
                   required
                 />
                 {recentSuppliers.length > 0 && (
