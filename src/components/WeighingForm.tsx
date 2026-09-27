@@ -185,7 +185,7 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
   };
 
   const fillSampleData = () => {
-    setSupplier('Suenah');
+    setSupplier('mextri');
     setAlamatSupplier('P6');
     setNoPolisi('BG 8421 LN');
     setGross('2500');
