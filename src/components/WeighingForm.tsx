@@ -84,7 +84,7 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
       setTare('');
     } else {
       // Default to sample so user can immediately click Print and test
-      setSupplier('Suenah');
+      setSupplier('Mextri');
       setAlamatSupplier('P6');
       setNoPolisi('BG 8421 LN');
       setGross('2500');
