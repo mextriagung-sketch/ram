@@ -1,0 +1,6 @@
+{
+  "name": "RAM SAWIT BERKAH JAYA - Sistem Timbangan Sawit",
+  "description": "Aplikasi penimbangan buah sawit RAM SAWIT BERKAH JAYA dengan cetak nota timbangan 21x24 cm dan integrasi Google Sheets Apps Script.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
