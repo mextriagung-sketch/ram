@@ -46,7 +46,7 @@ const INITIAL_RECORDS: WeighingRecord[] = [
     tanggalMasuk: 'Minggu, 27 September 2026',
     jamMasuk: '08:15',
     jamKeluar: '09:30',
-    supplier: 'Suenah',
+    supplier: 'Mextri',
     alamatSupplier: 'P6',
     gross: 2500,
     tare: 1200,
