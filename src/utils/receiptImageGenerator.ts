@@ -88,7 +88,10 @@ export async function downloadReceiptAsJpg(
               <td style="font-weight: bold;">RAFAKSI</td><td style="text-align: right; font-family: monospace; font-size: 12.5px; font-weight: 600;">${formatNum(record.rafaksiKg)}</td><td style="padding-left: 14px;">${record.rafaksiPersen > 0 ? `${record.rafaksiPersen}%` : ''}</td>
             </tr>
             <tr>
-              <td style="font-weight: bold;">NETTO</td><td style="text-align: right; font-family: monospace; font-size: 13px; font-weight: bold;">${formatNum(record.netto)}</td><td style="padding-left: 14px; font-weight: bold;">Harga : ${formatRp(record.hargaPerKg)}</td>
+              <td style="font-weight: bold;">NETTO</td>
+              <td style="text-align: right; font-family: monospace; font-size: 13px; font-weight: bold;">${formatNum(record.netto)}</td>
+              <td style="padding-left: 14px; font-weight: bold;">Kg</td>
+              <td style="text-align: right; font-weight: bold; font-size: 11px;">Harga : ${formatRp(record.hargaPerKg)}</td>
             </tr>
           </table>
           <div style="border-top: 1px solid #000; margin: 3px 0;"></div>

@@ -171,13 +171,16 @@ export const ReceiptPrint: React.FC<ReceiptPrintProps> = ({
             </div>
 
             {/* NETTO */}
-            <div className="flex items-center">
-              <span className="w-28 font-bold tracking-wide">NETTO</span>
-              <span className="w-24 text-right font-mono font-bold text-sm">
-                {formatNumber(record.netto)}
-              </span>
-              <div className="ml-8 text-xs font-bold">
-                Harga : {formatRupiah(record.hargaPerKg)}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <span className="w-28 font-bold tracking-wide">NETTO</span>
+                <span className="w-24 text-right font-mono font-bold text-sm">
+                  {formatNumber(record.netto)}
+                </span>
+                <span className="ml-4 text-xs font-bold">Kg</span>
+              </div>
+              <div className="text-xs font-bold text-gray-900 text-right pr-1">
+                Harga : <span className="font-mono text-sm">{formatRupiah(record.hargaPerKg)}</span>
               </div>
             </div>
           </div>

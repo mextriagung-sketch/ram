@@ -275,7 +275,8 @@ export async function generateReceiptHtml(
         <tr>
           <td class="col-label">NETTO</td>
           <td class="col-val" style="font-weight: bold;">${formatNumber(record.netto)}</td>
-          <td class="col-unit" style="font-weight: bold;">Harga : ${formatRupiah(record.hargaPerKg)}</td>
+          <td class="col-unit" style="font-weight: bold;">Kg</td>
+          <td style="text-align: right; font-weight: bold; font-size: 11px;">Harga : ${formatRupiah(record.hargaPerKg)}</td>
         </tr>
       </table>
 
