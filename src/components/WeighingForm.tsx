@@ -14,6 +14,7 @@ import {
   Percent,
   FileText,
   AlertTriangle,
+  ArrowDownToLine,
 } from 'lucide-react';
 import { WeighingRecord, AppSettings } from '../types/weighing';
 import {
@@ -24,6 +25,8 @@ import {
   formatNumber,
   angkaKeTerbilang,
 } from '../utils/formatters';
+import { useSerialScale } from '../hooks/useSerialScale';
+import { DigitalScaleIndicator } from './DigitalScaleIndicator';
 
 interface WeighingFormProps {
   settings: AppSettings;
@@ -33,6 +36,7 @@ interface WeighingFormProps {
   totalRecordsToday: number;
   recentSuppliers: string[];
   recentPlates: string[];
+  recentDrivers?: string[];
 }
 
 export const WeighingForm: React.FC<WeighingFormProps> = ({
@@ -43,9 +47,11 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
   totalRecordsToday,
   recentSuppliers,
   recentPlates,
+  recentDrivers = [],
 }) => {
   const [noSeri, setNoSeri] = useState<string>('');
   const [noPolisi, setNoPolisi] = useState<string>('');
+  const [namaSopir, setNamaSopir] = useState<string>('');
   const [tanggalMasuk, setTanggalMasuk] = useState<string>('');
   const [jamMasuk, setJamMasuk] = useState<string>('');
   const [jamKeluar, setJamKeluar] = useState<string>('');
@@ -65,6 +71,19 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
   // Quick message feedback
   const [formAlert, setFormAlert] = useState<string | null>(null);
 
+  // Digital Scale Serial Hook (Web Serial RS-232 / USB)
+  const scale = useSerialScale();
+
+  const handleApplyGrossFromScale = (weight: number) => {
+    setGross(String(weight));
+    setFormAlert(`Nilai GROSS berhasil diisi dari timbangan digital: ${weight.toLocaleString('id-ID')} Kg`);
+  };
+
+  const handleApplyTareFromScale = (weight: number) => {
+    setTare(String(weight));
+    setFormAlert(`Nilai TARE berhasil diisi dari timbangan digital: ${weight.toLocaleString('id-ID')} Kg`);
+  };
+
   // Initialize values on mount
   useEffect(() => {
     initForm();
@@ -80,13 +99,15 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
       setSupplier('');
       setAlamatSupplier('');
       setNoPolisi('');
+      setNamaSopir('');
       setGross('');
       setTare('');
     } else {
       // Default to sample so user can immediately click Print and test
-      setSupplier('Mextri');
+      setSupplier('mextri');
       setAlamatSupplier('P6');
       setNoPolisi('BG 8421 LN');
+      setNamaSopir('');
       setGross('2500');
       setTare('1200');
     }
@@ -126,6 +147,7 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
       id: 'SBJ-' + Date.now(),
       noSeri: noSeri.trim() || generateSerialNumber(totalRecordsToday + 1),
       noPolisi: noPolisi.trim().toUpperCase(),
+      namaSopir: namaSopir.trim(),
       tanggalMasuk: tanggalMasuk.trim() || getIndonesianFormattedDate(),
       jamMasuk: jamMasuk.trim() || getCurrentTimeHHMM(),
       jamKeluar: jamKeluar.trim() || getCurrentTimeHHMM(),
@@ -247,6 +269,13 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
       )}
 
       <form className="p-4 sm:p-6 space-y-6" onSubmit={(e) => e.preventDefault()}>
+        {/* LIVE SERIAL SCALE INDICATOR (RS232 / USB) */}
+        <DigitalScaleIndicator
+          scale={scale}
+          onApplyGross={handleApplyGrossFromScale}
+          onApplyTare={handleApplyTareFromScale}
+        />
+
         {/* SECTION 1: IDENTITAS TRANSAKSI & KENDARAAN */}
         <div>
           <div className="flex items-center gap-2 text-emerald-800 font-bold text-sm border-b pb-2 mb-4">
@@ -254,7 +283,7 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
             <span>1. DATA SURAT & IDENTITAS KENDARAAN</span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {/* No Seri */}
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">
@@ -301,6 +330,37 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
               </div>
             </div>
 
+            {/* Nama Sopir */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1 flex items-center justify-between">
+                <span>Nama Sopir</span>
+                <span className="text-[10px] text-gray-400 font-normal">Opsional</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={namaSopir}
+                  onChange={(e) => setNamaSopir(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  placeholder="Nama sopir pembawa truk"
+                />
+                {recentDrivers.length > 0 && !namaSopir && (
+                  <div className="flex gap-1 mt-1 overflow-x-auto py-0.5">
+                    {recentDrivers.slice(0, 3).map((drv) => (
+                      <button
+                        key={drv}
+                        type="button"
+                        onClick={() => setNamaSopir(drv)}
+                        className="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-700 px-1.5 py-0.5 rounded cursor-pointer shrink-0"
+                      >
+                        {drv}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Tanggal Masuk */}
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-1">
@@ -339,7 +399,7 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
                   value={supplier}
                   onChange={(e) => setSupplier(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  placeholder="Nama Supplier (misal: mextri, H. Mahmud, dll)"
+                  placeholder="Nama Supplier (misal: Suenah, H. Mahmud, dll)"
                   required
                 />
                 {recentSuppliers.length > 0 && (
@@ -450,43 +510,73 @@ export const WeighingForm: React.FC<WeighingFormProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* GROSS */}
-            <div className="bg-emerald-50/50 p-3 rounded-xl border border-emerald-200">
-              <label className="block text-xs font-bold text-emerald-900 uppercase tracking-wider mb-1">
-                GROSS (Truk + Isi)
-              </label>
-              <div className="relative flex items-center">
-                <input
-                  type="number"
-                  step="any"
-                  value={gross}
-                  onChange={(e) => setGross(e.target.value)}
-                  className="w-full pl-3 pr-10 py-2.5 text-xl font-bold font-mono text-gray-900 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 bg-white"
-                  placeholder="2500"
-                />
-                <span className="absolute right-3 font-semibold text-gray-500 text-sm">
-                  Kg
-                </span>
+            <div className="bg-emerald-50/50 p-3 rounded-xl border border-emerald-200 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-bold text-emerald-900 uppercase tracking-wider">
+                    GROSS (Truk + Isi)
+                  </label>
+                  {scale.isConnected && scale.currentWeight !== null && (
+                    <button
+                      type="button"
+                      onClick={() => handleApplyGrossFromScale(scale.currentWeight!)}
+                      className="text-[11px] bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition shadow-xs"
+                      title="Ambil angka timbangan saat ini"
+                    >
+                      <ArrowDownToLine className="w-3 h-3" />
+                      <span>Ambil dari Timbangan</span>
+                    </button>
+                  )}
+                </div>
+                <div className="relative flex items-center">
+                  <input
+                    type="number"
+                    step="any"
+                    value={gross}
+                    onChange={(e) => setGross(e.target.value)}
+                    className="w-full pl-3 pr-10 py-2.5 text-xl font-bold font-mono text-gray-900 border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-500 bg-white"
+                    placeholder="2500"
+                  />
+                  <span className="absolute right-3 font-semibold text-gray-500 text-sm">
+                    Kg
+                  </span>
+                </div>
               </div>
               <p className="text-[11px] text-gray-500 mt-1">Berat kotor pertama</p>
             </div>
 
             {/* TARE */}
-            <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200">
-              <label className="block text-xs font-bold text-amber-900 uppercase tracking-wider mb-1">
-                TARE (Truk Kosong)
-              </label>
-              <div className="relative flex items-center">
-                <input
-                  type="number"
-                  step="any"
-                  value={tare}
-                  onChange={(e) => setTare(e.target.value)}
-                  className="w-full pl-3 pr-10 py-2.5 text-xl font-bold font-mono text-gray-900 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 bg-white"
-                  placeholder="1200"
-                />
-                <span className="absolute right-3 font-semibold text-gray-500 text-sm">
-                  Kg
-                </span>
+            <div className="bg-amber-50/50 p-3 rounded-xl border border-amber-200 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-bold text-amber-900 uppercase tracking-wider">
+                    TARE (Truk Kosong)
+                  </label>
+                  {scale.isConnected && scale.currentWeight !== null && (
+                    <button
+                      type="button"
+                      onClick={() => handleApplyTareFromScale(scale.currentWeight!)}
+                      className="text-[11px] bg-amber-700 hover:bg-amber-600 text-white font-bold px-2 py-0.5 rounded flex items-center gap-1 cursor-pointer transition shadow-xs"
+                      title="Ambil angka timbangan saat ini"
+                    >
+                      <ArrowDownToLine className="w-3 h-3" />
+                      <span>Ambil dari Timbangan</span>
+                    </button>
+                  )}
+                </div>
+                <div className="relative flex items-center">
+                  <input
+                    type="number"
+                    step="any"
+                    value={tare}
+                    onChange={(e) => setTare(e.target.value)}
+                    className="w-full pl-3 pr-10 py-2.5 text-xl font-bold font-mono text-gray-900 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 bg-white"
+                    placeholder="1200"
+                  />
+                  <span className="absolute right-3 font-semibold text-gray-500 text-sm">
+                    Kg
+                  </span>
+                </div>
               </div>
               <p className="text-[11px] text-gray-500 mt-1">Berat tara kendaraan</p>
             </div>

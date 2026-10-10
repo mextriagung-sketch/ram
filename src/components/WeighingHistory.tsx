@@ -140,6 +140,7 @@ export const WeighingHistory: React.FC<WeighingHistoryProps> = ({
     const headers = [
       'No Seri',
       'No Polisi',
+      'Sopir',
       'Tanggal Masuk',
       'Jam Masuk',
       'Jam Keluar',
@@ -160,6 +161,7 @@ export const WeighingHistory: React.FC<WeighingHistoryProps> = ({
     const rows = filteredRecords.map((r) => [
       `"${r.noSeri}"`,
       `"${r.noPolisi}"`,
+      `"${r.namaSopir || ''}"`,
       `"${r.tanggalMasuk}"`,
       `"${r.jamMasuk}"`,
       `"${r.jamKeluar}"`,
@@ -363,7 +365,12 @@ export const WeighingHistory: React.FC<WeighingHistoryProps> = ({
                       </div>
                     </td>
                     <td className="py-2.5 px-3 font-mono font-semibold text-gray-800 whitespace-nowrap">
-                      {r.noPolisi || '-'}
+                      <div>{r.noPolisi || '-'}</div>
+                      {r.namaSopir && (
+                        <div className="text-[10px] font-sans text-gray-500 font-normal">
+                          Sopir: {r.namaSopir}
+                        </div>
+                      )}
                     </td>
                     <td className="py-2.5 px-3 whitespace-nowrap">
                       <div className="font-semibold text-gray-900">{r.supplier}</div>

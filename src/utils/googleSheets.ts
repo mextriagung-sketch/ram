@@ -190,6 +190,7 @@ export async function sendRecordToGoogleSheets(
   const payload: Record<string, any> = {
     noSeri: record.noSeri,
     noPolisi: record.noPolisi,
+    namaSopir: record.namaSopir || '',
     tanggalMasuk: record.tanggalMasuk,
     jamMasuk: record.jamMasuk,
     jamKeluar: record.jamKeluar,

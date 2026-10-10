@@ -220,6 +220,16 @@ export async function generateReceiptHtml(
           <td>:</td>
           <td>${record.jamKeluar || '-'}</td>
         </tr>
+        ${
+          record.namaSopir
+            ? `<tr>
+          <td style="font-weight: 500;">Sopir</td>
+          <td>:</td>
+          <td style="font-weight: bold; text-transform: uppercase;">${record.namaSopir}</td>
+          <td colspan="3"></td>
+        </tr>`
+            : ''
+        }
         <tr>
           <td style="font-weight: 500;">Tgl Masuk</td>
           <td>:</td>
@@ -281,7 +291,12 @@ export async function generateReceiptHtml(
       <div class="sig-section">
         <div class="sig-box-left">
           <div style="font-weight: bold;">SOPIR</div>
-          <div class="sig-line"></div>
+          <div>
+            <div class="sig-line"></div>
+            <div style="font-weight: bold; text-transform: uppercase; font-size: 10px; margin-top: 2px;">
+              ${record.namaSopir ? `( ${record.namaSopir} )` : '( .................... )'}
+            </div>
+          </div>
         </div>
 
         <div class="sig-box-right">

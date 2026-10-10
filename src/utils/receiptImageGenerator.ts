@@ -58,6 +58,7 @@ export async function downloadReceiptAsJpg(
               <td style="font-weight: 500;">No Polisi</td><td>:</td><td style="font-weight: bold; font-family: monospace;">${record.noPolisi || '-'}</td>
               <td style="font-weight: 500;">Jam Keluar</td><td>:</td><td>${record.jamKeluar || '-'}</td>
             </tr>
+            ${record.namaSopir ? `<tr><td style="font-weight: 500;">Sopir</td><td>:</td><td style="font-weight: bold; text-transform: uppercase;">${record.namaSopir}</td><td colspan="3"></td></tr>` : ''}
             <tr>
               <td style="font-weight: 500;">Tgl Masuk</td><td>:</td><td>${record.tanggalMasuk}</td>
               <td colspan="3"></td>
@@ -99,7 +100,12 @@ export async function downloadReceiptAsJpg(
           <div style="display: flex; justify-content: space-between; padding: 0 15px; margin-top: 3px; font-size: 10px;">
             <div style="display: flex; flex-direction: column; justify-content: space-between; height: 48px;">
               <span style="font-weight: bold;">SOPIR</span>
-              <div style="border-bottom: 1px solid #000; width: 110px;"></div>
+              <div>
+                <div style="border-bottom: 1px solid #000; width: 110px;"></div>
+                <div style="font-weight: bold; text-transform: uppercase; font-size: 10px; margin-top: 2px;">
+                  ${record.namaSopir ? `( ${record.namaSopir} )` : '( .................... )'}
+                </div>
+              </div>
             </div>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
               <div style="font-weight: bold; margin-right: 6px;">OPERATOR</div>

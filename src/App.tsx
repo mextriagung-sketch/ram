@@ -46,7 +46,7 @@ const INITIAL_RECORDS: WeighingRecord[] = [
     tanggalMasuk: 'Minggu, 27 September 2026',
     jamMasuk: '08:15',
     jamKeluar: '09:30',
-    supplier: 'Mextri',
+    supplier: 'mextri',
     alamatSupplier: 'P6',
     gross: 2500,
     tare: 1200,
@@ -80,8 +80,8 @@ export default function App() {
         parsed.paperWidthCm = 21;
         parsed.paperHeightCm = 14;
 
-        // If permanent URL is configured in code, always use it
-        if (PERMANENT_GOOGLE_APPS_SCRIPT_URL) {
+        // Use saved URL if user entered one, otherwise fallback to permanent URL default
+        if (!parsed.googleAppScriptUrl && PERMANENT_GOOGLE_APPS_SCRIPT_URL) {
           parsed.googleAppScriptUrl = PERMANENT_GOOGLE_APPS_SCRIPT_URL;
         }
         return { ...DEFAULT_SETTINGS, ...parsed };
@@ -206,9 +206,10 @@ export default function App() {
     );
   };
 
-  // Unique list of suppliers and plates for autocomplete
+  // Unique list of suppliers, plates, and drivers for autocomplete
   const recentSuppliers = Array.from(new Set(records.map((r) => r.supplier).filter(Boolean)));
   const recentPlates = Array.from(new Set(records.map((r) => r.noPolisi).filter(Boolean)));
+  const recentDrivers = Array.from(new Set(records.map((r) => r.namaSopir).filter((Boolean) as any) as string[]));
 
   const unsyncedCount = records.filter((r) => !r.syncedToSheets).length;
 
@@ -253,6 +254,19 @@ export default function App() {
 
               {/* Header Status & Quick Actions */}
               <div className="flex items-center gap-2 sm:gap-3">
+                {/* Standalone Tab Button for USB/Serial connectivity */}
+                {typeof window !== 'undefined' && window.self !== window.top && (
+                  <button
+                    type="button"
+                    onClick={() => window.open(window.location.href, '_blank')}
+                    className="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg border border-emerald-400 flex items-center gap-1.5 transition cursor-pointer shadow-sm active:scale-95"
+                    title="Buka aplikasi di tab baru agar browser mengizinkan port Serial/USB timbangan"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Buka di Tab Baru</span>
+                  </button>
+                )}
+
                 {/* Google Sheet Connection Badge */}
                 <button
                   type="button"
@@ -414,6 +428,7 @@ export default function App() {
                   totalRecordsToday={records.length}
                   recentSuppliers={recentSuppliers}
                   recentPlates={recentPlates}
+                  recentDrivers={recentDrivers}
                 />
               </div>
 

@@ -219,8 +219,21 @@ export const GoogleSheetSettings: React.FC<GoogleSheetSettingsProps> = ({
                   setFormData({ ...formData, googleAppScriptUrl: e.target.value.trim() })
                 }
                 placeholder="https://script.google.com/macros/s/AKfycbx.../exec"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-emerald-500 bg-gray-50"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:ring-2 focus:ring-emerald-500 bg-white"
               />
+              <button
+                type="button"
+                onClick={() => {
+                  onSaveSettings(formData);
+                  setSavedSuccess(true);
+                  setTimeout(() => setSavedSuccess(false), 4000);
+                }}
+                className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition cursor-pointer shrink-0 flex items-center justify-center gap-1.5 shadow-xs"
+                title="Simpan URL ke memori aplikasi"
+              >
+                <Save className="w-3.5 h-3.5" />
+                <span>Simpan URL</span>
+              </button>
               <button
                 type="button"
                 onClick={handleTestConnection}
@@ -233,7 +246,7 @@ export const GoogleSheetSettings: React.FC<GoogleSheetSettingsProps> = ({
                 type="button"
                 onClick={handleSendTestRow}
                 disabled={testRowLoading}
-                className="bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition cursor-pointer shrink-0 flex items-center justify-center gap-1.5 shadow-xs"
+                className="bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition cursor-pointer shrink-0 flex items-center justify-center gap-1.5 shadow-xs"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>{testRowLoading ? 'Mengirim...' : 'Kirim 1 Baris Tes'}</span>

@@ -109,6 +109,13 @@ export const ReceiptPrint: React.FC<ReceiptPrintProps> = ({
               <span className="w-3">:</span>
               <span>{record.jamKeluar || '-'}</span>
             </div>
+            {record.namaSopir && (
+              <div className="flex">
+                <span className="w-22 inline-block font-medium">Sopir</span>
+                <span className="w-3">:</span>
+                <span className="font-semibold uppercase">{record.namaSopir}</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -195,7 +202,12 @@ export const ReceiptPrint: React.FC<ReceiptPrintProps> = ({
           {/* Driver Signature */}
           <div className="flex flex-col justify-between h-14">
             <span className="font-bold tracking-wider text-[11px]">SOPIR</span>
-            <div className="border-b border-black w-28 mb-1"></div>
+            <div>
+              <div className="border-b border-black w-28 mb-0.5"></div>
+              <span className="text-[11px] font-bold uppercase tracking-wider block truncate max-w-[120px]">
+                {record.namaSopir ? `( ${record.namaSopir} )` : '( .................... )'}
+              </span>
+            </div>
           </div>
 
           {/* Operator Signature with QR Code */}
